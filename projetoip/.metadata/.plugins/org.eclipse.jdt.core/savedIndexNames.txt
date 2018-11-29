@@ -1,2 +1,0 @@
-INDEX VERSION 1.130+D:\Users\absn2\Desktop\projetoip\.metadata\.plugins\org.eclipse.jdt.core
-3798144050.index
