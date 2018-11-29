@@ -1,0 +1,94 @@
+package pessoas;
+
+public class RepositorioContasArray implements RepositorioContas {
+	private ContaAbstrata[] conta;
+	private int quantContas;
+
+	public RepositorioContasArray() {
+		this.conta = new ContaAbstrata[100];
+		this.quantContas = 0;
+	}
+
+	public void inserir(ContaAbstrata conta) throws NumeroCadastroExcedidoException, CpfCadastradoException {
+		boolean existe = this.existe(conta.getCpf());
+		if (existe == false) {
+			boolean parou = false;
+			for (int aux = 0; aux <= this.conta.length && parou == false; aux++) {
+				if (aux == this.conta.length) {
+					throw new NumeroCadastroExcedidoException();
+				} else {
+					if (this.conta[aux] != null) {
+						continue;
+					} else {
+						this.conta[aux] = conta;
+						this.quantContas = aux + 1;
+						parou = true;
+					}
+				}
+			}
+		} else {
+			throw new CpfCadastradoException();
+		}
+
+	}
+
+	public boolean existe(long cpf) {
+		for (int aux = 0; aux < this.conta.length; aux++) {
+			if (conta[aux] != null && this.conta[aux].getCpf() == cpf) {
+				return true;
+			} else {
+				continue;
+			}
+		}
+		return false;
+	}
+
+	public void remover(long cpf) throws CpfNaoCadastradoException {
+		boolean resultado = this.existe(cpf);
+		if (resultado == true) {
+			boolean parou = false;
+			for (int aux = 0; aux < this.conta.length && parou == false; aux++) {
+				if (this.conta[aux].getCpf() == cpf) {
+					this.conta[aux] = null;
+					for (int auxRecolocar = aux + 1; auxRecolocar < this.conta.length; auxRecolocar++) {
+						this.conta[aux] = this.conta[auxRecolocar];
+					}
+					this.quantContas -= 1;
+					parou = true;
+				}
+			}
+		} else {
+			throw new CpfNaoCadastradoException();
+		}
+	}
+
+	public void atualizar(ContaAbstrata conta) {
+		boolean resultado = this.existe(conta.getCpf());
+		if (resultado == true) {
+			boolean parou = false;
+			for (int aux = 0; aux < this.conta.length && parou == false; aux++) {
+				if (this.conta[aux].getCpf() == conta.getCpf()) {
+					this.conta[aux] = conta;
+					parou = true;
+				}
+			}
+		}
+	}
+
+	public ContaAbstrata procurar(long cpf) throws CpfNaoCadastradoException {
+		boolean resultado = this.existe(cpf);
+		if (resultado == true) {
+			boolean parou = false;
+			ContaAbstrata procurada = null;
+			for (int aux = 0; aux < this.conta.length && parou == false; aux++) {
+				if (this.conta[aux].getCpf() == cpf) {
+					procurada = conta[aux];
+					parou = true;
+				}
+			}
+			return procurada;
+		} else {
+			throw new CpfNaoCadastradoException();
+		}
+	}
+}
